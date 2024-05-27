@@ -1,0 +1,388 @@
+---
+openapi: 3.0.3
+info:
+  version: 1.1.4
+  title: GitHub v3 REST API
+  description: GitHub's v3 REST API.
+  license:
+    name: MIT
+    url: https://spdx.org/licenses/MIT
+  termsOfService: https://docs.github.com/articles/github-terms-of-service
+  contact:
+    name: Support
+    url: https://support.github.com/contact?tags=dotcom-rest-api
+  x-github-plan: api.github.com
+tags:
+- name: actions
+  description: Endpoints to manage GitHub Actions using the REST API.
+- name: activity
+  description: Activity APIs provide access to notifications, subscriptions, and timelines.
+- name: apps
+  description: Information for integrations and installations.
+- name: billing
+  description: Monitor charges and usage from Actions and Packages.
+- name: checks
+  description: Rich interactions with checks run by your integrations.
+- name: code-scanning
+  description: Retrieve code scanning alerts from a repository.
+- name: codes-of-conduct
+  description: Insight into codes of conduct for your communities.
+- name: emojis
+  description: List emojis available to use on GitHub.
+- name: dependabot
+  description: Endpoints to manage Dependabot.
+- name: dependency-graph
+  description: Endpoints to access Dependency Graph features.
+- name: gists
+  description: View, modify your gists.
+- name: git
+  description: Raw Git functionality.
+- name: gitignore
+  description: View gitignore templates
+- name: issues
+  description: Interact with GitHub Issues.
+- name: licenses
+  description: View various OSS licenses.
+- name: markdown
+  description: Render GitHub flavored markdown
+- name: merge-queue
+  description: Interact with GitHub Merge Queues.
+- name: meta
+  description: Endpoints that give information about the API.
+- name: migrations
+  description: Move projects to or from GitHub.
+- name: oidc
+  description: Endpoints to manage GitHub OIDC configuration using the REST API.
+- name: orgs
+  description: Interact with GitHub Orgs.
+- name: packages
+  description: Manage packages for authenticated users and organizations.
+- name: projects
+  description: Interact with GitHub Projects.
+- name: pulls
+  description: Interact with GitHub Pull Requests.
+- name: rate-limit
+  description: Check your current rate limit status
+- name: reactions
+  description: Interact with reactions to various GitHub entities.
+- name: repos
+  description: Interact with GitHub Repos.
+- name: search
+  description: Look for stuff on GitHub.
+- name: secret-scanning
+  description: Retrieve secret scanning alerts from a repository.
+- name: teams
+  description: Interact with GitHub Teams.
+- name: users
+  description: Interact with and view information about users and also current user.
+- name: codespaces
+  description: Endpoints to manage Codespaces using the REST API.
+- name: copilot
+  description: Endpoints to manage Copilot using the REST API.
+- name: security-advisories
+  description: Manage security advisories.
+- name: interactions
+  description: Owner or admin management of users interactions.
+- name: classroom
+  description: Interact with GitHub Classroom.
+- name: desktop
+  description: Desktop specific endpoints.
+- name: enterprise-teams
+  description: Endpoints to manage GitHub Enterprise Teams.
+servers:
+- url: https://api.github.com
+externalDocs:
+  description: GitHub v3 REST API
+  url: https://docs.github.com/rest/
+paths:
+  "/":
+    get:
+      summary: GitHub API Root
+      description: Get Hypermedia links to resources accessible in GitHub's REST API
+      tags:
+      - meta
+      operationId: meta/root
+      responses:
+        '200':
+          description: Response
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  current_user_url:
+                    type: string
+                    format: uri-template
+                  current_user_authorizations_html_url:
+                    type: string
+                    format: uri-template
+                  authorizations_url:
+                    type: string
+                    format: uri-template
+                  code_search_url:
+                    type: string
+                    format: uri-template
+                  commit_search_url:
+                    type: string
+                    format: uri-template
+                  emails_url:
+                    type: string
+                    format: uri-template
+                  emojis_url:
+                    type: string
+                    format: uri-template
+                  events_url:
+                    type: string
+                    format: uri-template
+                  feeds_url:
+                    type: string
+                    format: uri-template
+                  followers_url:
+                    type: string
+                    format: uri-template
+                  following_url:
+                    type: string
+                    format: uri-template
+                  gists_url:
+                    type: string
+                    format: uri-template
+                  hub_url:
+                    type: string
+                    format: uri-template
+                    deprecated: true
+                  issue_search_url:
+                    type: string
+                    format: uri-template
+                  issues_url:
+                    type: string
+                    format: uri-template
+                  keys_url:
+                    type: string
+                    format: uri-template
+                  label_search_url:
+                    type: string
+                    format: uri-template
+                  notifications_url:
+                    type: string
+                    format: uri-template
+                  organization_url:
+                    type: string
+                    format: uri-template
+                  organization_repositories_url:
+                    type: string
+                    format: uri-template
+                  organization_teams_url:
+                    type: string
+                    format: uri-template
+                  public_gists_url:
+                    type: string
+                    format: uri-template
+                  rate_limit_url:
+                    type: string
+                    format: uri-template
+                  repository_url:
+                    type: string
+                    format: uri-template
+                  repository_search_url:
+                    type: string
+                    format: uri-template
+                  current_user_repositories_url:
+                    type: string
+                    format: uri-template
+                  starred_url:
+                    type: string
+                    format: uri-template
+                  starred_gists_url:
+                    type: string
+                    format: uri-template
+                  topic_search_url:
+                    type: string
+                    format: uri-template
+                  user_url:
+                    type: string
+                    format: uri-template
+                  user_organizations_url:
+                    type: string
+                    format: uri-template
+                  user_repositories_url:
+                    type: string
+                    format: uri-template
+                  user_search_url:
+                    type: string
+                    format: uri-template
+                required:
+                - current_user_url
+                - current_user_authorizations_html_url
+                - authorizations_url
+                - code_search_url
+                - commit_search_url
+                - emails_url
+                - emojis_url
+                - events_url
+                - feeds_url
+                - followers_url
+                - following_url
+                - gists_url
+                - issue_search_url
+                - issues_url
+                - keys_url
+                - label_search_url
+                - notifications_url
+                - organization_url
+                - organization_repositories_url
+                - organization_teams_url
+                - public_gists_url
+                - rate_limit_url
+                - repository_url
+                - repository_search_url
+                - current_user_repositories_url
+                - starred_url
+                - starred_gists_url
+                - user_url
+                - user_organizations_url
+                - user_repositories_url
+                - user_search_url
+              examples:
+                default:
+                  value:
+                    current_user_url: https://api.github.com/user
+                    current_user_authorizations_html_url: https://github.com/settings/connections/applications{/client_id}
+                    authorizations_url: https://api.github.com/authorizations
+                    code_search_url: https://api.github.com/search/code?q={query}{&page,per_page,sort,order}
+                    commit_search_url: https://api.github.com/search/commits?q={query}{&page,per_page,sort,order}
+                    emails_url: https://api.github.com/user/emails
+                    emojis_url: https://api.github.com/emojis
+                    events_url: https://api.github.com/events
+                    feeds_url: https://api.github.com/feeds
+                    followers_url: https://api.github.com/user/followers
+                    following_url: https://api.github.com/user/following{/target}
+                    gists_url: https://api.github.com/gists{/gist_id}
+                    hub_url: https://api.github.com/hub
+                    issue_search_url: https://api.github.com/search/issues?q={query}{&page,per_page,sort,order}
+                    issues_url: https://api.github.com/issues
+                    keys_url: https://api.github.com/user/keys
+                    label_search_url: https://api.github.com/search/labels?q={query}&repository_id={repository_id}{&page,per_page}
+                    notifications_url: https://api.github.com/notifications
+                    organization_url: https://api.github.com/orgs/{org}
+                    organization_repositories_url: https://api.github.com/orgs/{org}/repos{?type,page,per_page,sort}
+                    organization_teams_url: https://api.github.com/orgs/{org}/teams
+                    public_gists_url: https://api.github.com/gists/public
+                    rate_limit_url: https://api.github.com/rate_limit
+                    repository_url: https://api.github.com/repos/{owner}/{repo}
+                    repository_search_url: https://api.github.com/search/repositories?q={query}{&page,per_page,sort,order}
+                    current_user_repositories_url: https://api.github.com/user/repos{?type,page,per_page,sort}
+                    starred_url: https://api.github.com/user/starred{/owner}{/repo}
+                    starred_gists_url: https://api.github.com/gists/starred
+                    topic_search_url: https://api.github.com/search/topics?q={query}{&page,per_page}
+                    user_url: https://api.github.com/users/{user}
+                    user_organizations_url: https://api.github.com/user/orgs
+                    user_repositories_url: https://api.github.com/users/{user}/repos{?type,page,per_page,sort}
+                    user_search_url: https://api.github.com/search/users?q={query}{&page,per_page,sort,order}
+      x-github:
+        githubCloudOnly: false
+        enabledForGitHubApps: true
+        category: meta
+        subcategory: meta
+      externalDocs:
+        description: API method documentation
+        url: https://docs.github.com/rest/meta/meta#github-api-root
+  "/advisories":
+    get:
+      summary: List global security advisories
+      description: |-
+        Lists all global security advisories that match the specified parameters. If no other parameters are defined, the request will return only GitHub-reviewed advisories that are not malware.
+
+        By default, all responses will exclude advisories for malware, because malware are not standard vulnerabilities. To list advisories for malware, you must include the `type` parameter in your request, with the value `malware`. For more information about the different types of security advisories, see "[About the GitHub Advisory database](https://docs.github.com/code-security/security-advisories/global-security-advisories/about-the-github-advisory-database#about-types-of-security-advisories)."
+      tags:
+      - security-advisories
+      operationId: security-advisories/list-global-advisories
+      externalDocs:
+        description: API method documentation
+        url: https://docs.github.com/rest/security-advisories/global-advisories#list-global-security-advisories
+      parameters:
+      - name: ghsa_id
+        in: query
+        description: If specified, only advisories with this GHSA (GitHub Security
+          Advisory) identifier will be returned.
+        schema:
+          type: string
+      - name: type
+        in: query
+        description: If specified, only advisories of this type will be returned.
+          By default, a request with no other parameters defined will only return
+          reviewed advisories that are not malware.
+        schema:
+          type: string
+          enum:
+          - reviewed
+          - malware
+          - unreviewed
+          default: reviewed
+      - name: cve_id
+        description: If specified, only advisories with this CVE (Common Vulnerabilities
+          and Exposures) identifier will be returned.
+        in: query
+        schema:
+          type: string
+      - name: ecosystem
+        in: query
+        description: If specified, only advisories for these ecosystems will be returned.
+        schema: &1
+          type: string
+          description: The package's language or package management ecosystem.
+          enum:
+          - rubygems
+          - npm
+          - pip
+          - maven
+          - nuget
+          - composer
+          - go
+          - rust
+          - erlang
+          - actions
+          - pub
+          - other
+          - swift
+      - name: severity
+        in: query
+        description: If specified, only advisories with these severities will be returned.
+        schema:
+          type: string
+          enum:
+          - unknown
+          - low
+          - medium
+          - high
+          - critical
+      - name: cwes
+        in: query
+        description: |-
+          If specified, only advisories with these Common Weakness Enumerations (CWEs) will be returned.
+
+          Example: `cwes=79,284,22` or `cwes[]=79&cwes[]=284&cwes[]=22`
+        schema:
+          oneOf:
+          - type: string
+          - type: array
+            items:
+              type: string
+      - name: is_withdrawn
+        in: query
+        description: Whether to only return advisories that have been withdrawn.
+        schema:
+          type: boolean
+      - name: affects
+        in: query
+        description: |-
+          If specified, only return advisories that affect any of `package` or `package@version`. A maximum of 1000 packages can be specified.
+          If the query parameter causes the URL to exceed the maximum URL length supported by your client, you must specify fewer packages.
+
+          Example: `affects=package1,package2@1.0.0,package3@^2.0.0` or `affects[]=package1&affects[]=package2@1.0.0`
+        schema:
+          oneOf:
+          - type: string
+          - type: array
+            maxItems: 1000
+            items:
+              type: string
