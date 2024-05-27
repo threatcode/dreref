@@ -386,3 +386,952 @@ paths:
             maxItems: 1000
             items:
               type: string
+
+      - name: published
+        in: query
+        description: |-
+          If specified, only return advisories that were published on a date or date range.
+
+          For more information on the syntax of the date range, see "[Understanding the search syntax](https://docs.github.com/search-github/getting-started-with-searching-on-github/understanding-the-search-syntax#query-for-dates)."
+        schema:
+          type: string
+      - name: updated
+        in: query
+        description: |-
+          If specified, only return advisories that were updated on a date or date range.
+
+          For more information on the syntax of the date range, see "[Understanding the search syntax](https://docs.github.com/search-github/getting-started-with-searching-on-github/understanding-the-search-syntax#query-for-dates)."
+        schema:
+          type: string
+      - name: modified
+        description: |-
+          If specified, only show advisories that were updated or published on a date or date range.
+
+          For more information on the syntax of the date range, see "[Understanding the search syntax](https://docs.github.com/search-github/getting-started-with-searching-on-github/understanding-the-search-syntax#query-for-dates)."
+        in: query
+        schema:
+          type: string
+      - &41
+        name: before
+        description: A cursor, as given in the [Link header](https://docs.github.com/rest/guides/using-pagination-in-the-rest-api#using-link-headers).
+          If specified, the query only searches for results before this cursor. For
+          more information, see "[Using pagination in the REST API](https://docs.github.com/rest/using-the-rest-api/using-pagination-in-the-rest-api)."
+        in: query
+        required: false
+        schema:
+          type: string
+      - &42
+        name: after
+        description: A cursor, as given in the [Link header](https://docs.github.com/rest/guides/using-pagination-in-the-rest-api#using-link-headers).
+          If specified, the query only searches for results after this cursor. For
+          more information, see "[Using pagination in the REST API](https://docs.github.com/rest/using-the-rest-api/using-pagination-in-the-rest-api)."
+        in: query
+        required: false
+        schema:
+          type: string
+      - &40
+        name: direction
+        description: The direction to sort the results by.
+        in: query
+        required: false
+        schema:
+          type: string
+          enum:
+          - asc
+          - desc
+          default: desc
+      - name: per_page
+        description: The number of results per page (max 100). For more information,
+          see "[Using pagination in the REST API](https://docs.github.com/rest/using-the-rest-api/using-pagination-in-the-rest-api)."
+        in: query
+        schema:
+          type: integer
+          minimum: 1
+          maximum: 100
+          default: 30
+      - name: sort
+        description: The property to sort the results by.
+        in: query
+        required: false
+        schema:
+          type: string
+          enum:
+          - updated
+          - published
+          default: published
+      responses:
+        '200':
+          description: Response
+          content:
+            application/json:
+              schema:
+                type: array
+                items: &2
+                  description: A GitHub Security Advisory.
+                  type: object
+                  properties:
+                    ghsa_id:
+                      type: string
+                      description: The GitHub Security Advisory ID.
+                      readOnly: true
+                    cve_id:
+                      type: string
+                      description: The Common Vulnerabilities and Exposures (CVE)
+                        ID.
+                      nullable: true
+                      readOnly: true
+                    url:
+                      type: string
+                      description: The API URL for the advisory.
+                      readOnly: true
+                    html_url:
+                      type: string
+                      format: uri
+                      description: The URL for the advisory.
+                      readOnly: true
+                    repository_advisory_url:
+                      type: string
+                      format: uri
+                      description: The API URL for the repository advisory.
+                      readOnly: true
+                      nullable: true
+                    summary:
+                      type: string
+                      description: A short summary of the advisory.
+                      maxLength: 1024
+                    description:
+                      type: string
+                      description: A detailed description of what the advisory entails.
+                      maxLength: 65535
+                      nullable: true
+                    type:
+                      type: string
+                      description: The type of advisory.
+                      readOnly: true
+                      enum:
+                      - reviewed
+                      - unreviewed
+                      - malware
+                    severity:
+                      type: string
+                      description: The severity of the advisory.
+                      enum:
+                      - critical
+                      - high
+                      - medium
+                      - low
+                      - unknown
+                    source_code_location:
+                      type: string
+                      format: uri
+                      description: The URL of the advisory's source code.
+                      nullable: true
+                    identifiers:
+                      type: array
+                      nullable: true
+                      readOnly: true
+                      items:
+                        type: object
+                        properties:
+                          type:
+                            type: string
+                            description: The type of identifier.
+                            enum:
+                            - CVE
+                            - GHSA
+                          value:
+                            type: string
+                            description: The identifier value.
+                        required:
+                        - type
+                        - value
+                    references:
+                      type: array
+                      nullable: true
+                      items:
+                        type: string
+                        description: URLs with more information regarding the advisory.
+                    published_at:
+                      type: string
+                      format: date-time
+                      description: The date and time of when the advisory was published,
+                        in ISO 8601 format.
+                      readOnly: true
+                    updated_at:
+                      type: string
+                      format: date-time
+                      description: The date and time of when the advisory was last
+                        updated, in ISO 8601 format.
+                      readOnly: true
+                    github_reviewed_at:
+                      type: string
+                      format: date-time
+                      description: The date and time of when the advisory was reviewed
+                        by GitHub, in ISO 8601 format.
+                      readOnly: true
+                      nullable: true
+                    nvd_published_at:
+                      type: string
+                      format: date-time
+                      description: |-
+                        The date and time when the advisory was published in the National Vulnerability Database, in ISO 8601 format.
+                        This field is only populated when the advisory is imported from the National Vulnerability Database.
+                      readOnly: true
+                      nullable: true
+                    withdrawn_at:
+                      type: string
+                      format: date-time
+                      description: The date and time of when the advisory was withdrawn,
+                        in ISO 8601 format.
+                      readOnly: true
+                      nullable: true
+                    vulnerabilities:
+                      type: array
+                      description: The products and respective version ranges affected
+                        by the advisory.
+                      nullable: true
+                      items:
+                        description: A vulnerability describing the product and its
+                          affected versions within a GitHub Security Advisory.
+                        type: object
+                        properties:
+                          package:
+                            description: The name of the package affected by the vulnerability.
+                            type: object
+                            nullable: true
+                            properties:
+                              ecosystem: *1
+                              name:
+                                type: string
+                                description: The unique package name within its ecosystem.
+                                nullable: true
+                            required:
+                            - ecosystem
+                            - name
+                          vulnerable_version_range:
+                            type: string
+                            description: The range of the package versions affected
+                              by the vulnerability.
+                            nullable: true
+                          first_patched_version:
+                            type: string
+                            description: The package version that resolves the vulnerability.
+                            nullable: true
+                          vulnerable_functions:
+                            type: array
+                            description: The functions in the package that are affected
+                              by the vulnerability.
+                            nullable: true
+                            readOnly: true
+                            items:
+                              type: string
+                        required:
+                        - package
+                        - vulnerable_version_range
+                        - first_patched_version
+                        - vulnerable_functions
+                    cvss:
+                      type: object
+                      nullable: true
+                      properties:
+                        vector_string:
+                          type: string
+                          description: The CVSS vector.
+                          nullable: true
+                        score:
+                          type: number
+                          description: The CVSS score.
+                          minimum: 0
+                          maximum: 10
+                          nullable: true
+                          readOnly: true
+                      required:
+                      - vector_string
+                      - score
+                    cwes:
+                      type: array
+                      nullable: true
+                      items:
+                        type: object
+                        properties:
+                          cwe_id:
+                            type: string
+                            description: The Common Weakness Enumeration (CWE) identifier.
+                          name:
+                            type: string
+                            description: The name of the CWE.
+                            readOnly: true
+                        required:
+                        - cwe_id
+                        - name
+                    credits:
+                      type: array
+                      description: The users who contributed to the advisory.
+                      nullable: true
+                      readOnly: true
+                      items:
+                        type: object
+                        properties:
+                          user: &19
+                            title: Simple User
+                            description: A GitHub user.
+                            type: object
+                            properties: &4
+                              name:
+                                nullable: true
+                                type: string
+                              email:
+                                nullable: true
+                                type: string
+                              login:
+                                type: string
+                                example: octocat
+                              id:
+                                type: integer
+                                example: 1
+                              node_id:
+                                type: string
+                                example: MDQ6VXNlcjE=
+                              avatar_url:
+                                type: string
+                                format: uri
+                                example: https://github.com/images/error/octocat_happy.gif
+                              gravatar_id:
+                                type: string
+                                example: 41d064eb2195891e12d0413f63227ea7
+                                nullable: true
+                              url:
+                                type: string
+                                format: uri
+                                example: https://api.github.com/users/octocat
+                              html_url:
+                                type: string
+                                format: uri
+                                example: https://github.com/octocat
+                              followers_url:
+                                type: string
+                                format: uri
+                                example: https://api.github.com/users/octocat/followers
+                              following_url:
+                                type: string
+                                example: https://api.github.com/users/octocat/following{/other_user}
+                              gists_url:
+                                type: string
+                                example: https://api.github.com/users/octocat/gists{/gist_id}
+                              starred_url:
+                                type: string
+                                example: https://api.github.com/users/octocat/starred{/owner}{/repo}
+                              subscriptions_url:
+                                type: string
+                                format: uri
+                                example: https://api.github.com/users/octocat/subscriptions
+                              organizations_url:
+                                type: string
+                                format: uri
+                                example: https://api.github.com/users/octocat/orgs
+                              repos_url:
+                                type: string
+                                format: uri
+                                example: https://api.github.com/users/octocat/repos
+                              events_url:
+                                type: string
+                                example: https://api.github.com/users/octocat/events{/privacy}
+                              received_events_url:
+                                type: string
+                                format: uri
+                                example: https://api.github.com/users/octocat/received_events
+                              type:
+                                type: string
+                                example: User
+                              site_admin:
+                                type: boolean
+                              starred_at:
+                                type: string
+                                example: '"2020-07-09T00:17:55Z"'
+                            required: &5
+                            - avatar_url
+                            - events_url
+                            - followers_url
+                            - following_url
+                            - gists_url
+                            - gravatar_id
+                            - html_url
+                            - id
+                            - node_id
+                            - login
+                            - organizations_url
+                            - received_events_url
+                            - repos_url
+                            - site_admin
+                            - starred_url
+                            - subscriptions_url
+                            - type
+                            - url
+                          type: &207
+                            type: string
+                            description: The type of credit the user is receiving.
+                            enum:
+                            - analyst
+                            - finder
+                            - reporter
+                            - coordinator
+                            - remediation_developer
+                            - remediation_reviewer
+                            - remediation_verifier
+                            - tool
+                            - sponsor
+                            - other
+                        required:
+                        - user
+                        - type
+                  required:
+                  - ghsa_id
+                  - cve_id
+                  - url
+                  - html_url
+                  - repository_advisory_url
+                  - summary
+                  - description
+                  - type
+                  - severity
+                  - source_code_location
+                  - identifiers
+                  - references
+                  - published_at
+                  - updated_at
+                  - github_reviewed_at
+                  - nvd_published_at
+                  - withdrawn_at
+                  - vulnerabilities
+                  - cvss
+                  - cwes
+                  - credits
+                  additionalProperties: false
+              examples:
+                default:
+                  value:
+                  - id: 1
+                    ghsa_id: GHSA-abcd-1234-efgh
+                    cve_id: CVE-2050-00000
+                    url: https://api.github.com/advisories/GHSA-abcd-1234-efgh
+                    html_url: https://github.com/advisories/GHSA-abcd-1234-efgh
+                    repository_advisory_url: https://api.github.com/repos/project/a-package/security-advisories/GHSA-abcd-1234-efgh
+                    summary: Heartbleed security advisory
+                    description: This bug allows an attacker to read portions of the
+                      affected serverâ€™s memory, potentially disclosing sensitive information.
+                    type: reviewed
+                    severity: high
+                    source_code_location: https://github.com/project/a-package
+                    identifiers:
+                    - type: GHSA
+                      value: GHSA-abcd-1234-efgh
+                    - type: CVE
+                      value: CVE-2050-00000
+                    references:
+                    - https://nvd.nist.gov/vuln/detail/CVE-2050-00000
+                    published_at: '2023-03-23T02:30:56Z'
+                    updated_at: '2023-03-24T02:30:56Z'
+                    github_reviewed_at: '2023-03-23T02:30:56Z'
+                    nvd_published_at: '2023-03-25T02:30:56Z'
+                    withdrawn_at: 
+                    vulnerabilities:
+                    - package:
+                        ecosystem: npm
+                        name: a-package
+                      first_patched_version: 1.0.3
+                      vulnerable_version_range: "<=1.0.2"
+                      vulnerable_functions:
+                      - a_function
+                    cvss:
+                      vector_string: CVSS:3.1/AV:N/AC:H/PR:H/UI:R/S:C/C:H/I:H/A:H
+                      score: 7.6
+                    cwes:
+                    - cwe_id: CWE-400
+                      name: Uncontrolled Resource Consumption
+                    credits:
+                    - user:
+                        login: octocat
+                        id: 1
+                        node_id: MDQ6VXNlcjE=
+                        avatar_url: https://github.com/images/error/octocat_happy.gif
+                        gravatar_id: ''
+                        url: https://api.github.com/users/octocat
+                        html_url: https://github.com/octocat
+                        followers_url: https://api.github.com/users/octocat/followers
+                        following_url: https://api.github.com/users/octocat/following{/other_user}
+                        gists_url: https://api.github.com/users/octocat/gists{/gist_id}
+                        starred_url: https://api.github.com/users/octocat/starred{/owner}{/repo}
+                        subscriptions_url: https://api.github.com/users/octocat/subscriptions
+                        organizations_url: https://api.github.com/users/octocat/orgs
+                        repos_url: https://api.github.com/users/octocat/repos
+                        events_url: https://api.github.com/users/octocat/events{/privacy}
+                        received_events_url: https://api.github.com/users/octocat/received_events
+                        type: User
+                        site_admin: false
+                      type: analyst
+        '429':
+          description: Too many requests
+          content:
+            application/json:
+              schema: &3
+                title: Basic Error
+                description: Basic Error
+                type: object
+                properties:
+                  message:
+                    type: string
+                  documentation_url:
+                    type: string
+                  url:
+                    type: string
+                  status:
+                    type: string
+        '422': &8
+          description: Validation failed, or the endpoint has been spammed.
+          content:
+            application/json:
+              schema: &90
+                title: Validation Error Simple
+                description: Validation Error Simple
+                type: object
+                required:
+                - message
+                - documentation_url
+                properties:
+                  message:
+                    type: string
+                  documentation_url:
+                    type: string
+                  errors:
+                    type: array
+                    items:
+                      type: string
+      x-github:
+        githubCloudOnly: false
+        enabledForGitHubApps: true
+        category: security-advisories
+        subcategory: global-advisories
+  "/advisories/{ghsa_id}":
+    get:
+      summary: Get a global security advisory
+      description: Gets a global security advisory using its GitHub Security Advisory
+        (GHSA) identifier.
+      tags:
+      - security-advisories
+      operationId: security-advisories/get-global-advisory
+      externalDocs:
+        description: API method documentation
+        url: https://docs.github.com/rest/security-advisories/global-advisories#get-a-global-security-advisory
+      parameters:
+      - &513
+        name: ghsa_id
+        description: The GHSA (GitHub Security Advisory) identifier of the advisory.
+        in: path
+        required: true
+        schema:
+          type: string
+      responses:
+        '200':
+          description: Response
+          content:
+            application/json:
+              schema: *2
+              examples:
+                default:
+                  value:
+                    ghsa_id: GHSA-abcd-1234-efgh
+                    cve_id: CVE-2050-00000
+                    url: https://api.github.com/advisories/GHSA-abcd-1234-efgh
+                    html_url: https://github.com/advisories/GHSA-abcd-1234-efgh
+                    repository_advisory_url: https://api.github.com/repos/project/a-package/security-advisories/GHSA-abcd-1234-efgh
+                    summary: A short summary of the advisory.
+                    description: A detailed description of what the advisory entails.
+                    type: reviewed
+                    severity: high
+                    source_code_location: https://github.com/project/a-package
+                    identifiers:
+                    - type: GHSA
+                      value: GHSA-abcd-1234-efgh
+                    - type: CVE
+                      value: CVE-2050-00000
+                    references:
+                    - https://nvd.nist.gov/vuln/detail/CVE-2050-00000
+                    published_at: '2023-03-23T02:30:56Z'
+                    updated_at: '2023-03-24T02:30:56Z'
+                    github_reviewed_at: '2023-03-23T02:30:56Z'
+                    nvd_published_at: '2023-03-25T02:30:56Z'
+                    withdrawn_at: 
+                    vulnerabilities:
+                    - package:
+                        ecosystem: npm
+                        name: a-package
+                      first_patched_version: 1.0.3
+                      vulnerable_version_range: "<=1.0.2"
+                      vulnerable_functions:
+                      - a_function
+                    cvss:
+                      vector_string: CVSS:3.1/AV:N/AC:H/PR:H/UI:R/S:C/C:H/I:H/A:H
+                      score: 7.6
+                    cwes:
+                    - cwe_id: CWE-400
+                      name: Uncontrolled Resource Consumption
+                    credits:
+                    - user:
+                        login: octocat
+                        id: 1
+                        node_id: MDQ6VXNlcjE=
+                        avatar_url: https://github.com/images/error/octocat_happy.gif
+                        gravatar_id: ''
+                        url: https://api.github.com/users/octocat
+                        html_url: https://github.com/octocat
+                        followers_url: https://api.github.com/users/octocat/followers
+                        following_url: https://api.github.com/users/octocat/following{/other_user}
+                        gists_url: https://api.github.com/users/octocat/gists{/gist_id}
+                        starred_url: https://api.github.com/users/octocat/starred{/owner}{/repo}
+                        subscriptions_url: https://api.github.com/users/octocat/subscriptions
+                        organizations_url: https://api.github.com/users/octocat/orgs
+                        repos_url: https://api.github.com/users/octocat/repos
+                        events_url: https://api.github.com/users/octocat/events{/privacy}
+                        received_events_url: https://api.github.com/users/octocat/received_events
+                        type: User
+                        site_admin: false
+                      type: analyst
+        '404': &7
+          description: Resource not found
+          content:
+            application/json:
+              schema: *3
+      x-github:
+        githubCloudOnly: false
+        enabledForGitHubApps: true
+        category: security-advisories
+        subcategory: global-advisories
+  "/app":
+    get:
+      summary: Get the authenticated app
+      description: |-
+        Returns the GitHub App associated with the authentication credentials used. To see how many app installations are associated with this GitHub App, see the `installations_count` in the response. For more details about your app's installations, see the "[List installations for the authenticated app](https://docs.github.com/rest/apps/apps#list-installations-for-the-authenticated-app)" endpoint.
+
+        You must use a [JWT](https://docs.github.com/apps/building-github-apps/authenticating-with-github-apps/#authenticating-as-a-github-app) to access this endpoint.
+      tags:
+      - apps
+      operationId: apps/get-authenticated
+      externalDocs:
+        description: API method documentation
+        url: https://docs.github.com/rest/apps/apps#get-the-authenticated-app
+      parameters: []
+      responses:
+        '200':
+          description: Response
+          content:
+            application/json:
+              schema: &6
+                title: GitHub app
+                description: GitHub apps are a new way to extend GitHub. They can
+                  be installed directly on organizations and user accounts and granted
+                  access to specific repositories. They come with granular permissions
+                  and built-in webhooks. GitHub apps are first class actors within
+                  GitHub.
+                type: object
+                nullable: true
+                properties: &53
+                  id:
+                    description: Unique identifier of the GitHub app
+                    example: 37
+                    type: integer
+                  slug:
+                    description: The slug name of the GitHub app
+                    example: probot-owners
+                    type: string
+                  node_id:
+                    type: string
+                    example: MDExOkludGVncmF0aW9uMQ==
+                  owner:
+                    title: Simple User
+                    description: A GitHub user.
+                    type: object
+                    properties: *4
+                    required: *5
+                    nullable: true
+                  name:
+                    description: The name of the GitHub app
+                    example: Probot Owners
+                    type: string
+                  description:
+                    type: string
+                    example: The description of the app.
+                    nullable: true
+                  external_url:
+                    type: string
+                    format: uri
+                    example: https://example.com
+                  html_url:
+                    type: string
+                    format: uri
+                    example: https://github.com/apps/super-ci
+                  created_at:
+                    type: string
+                    format: date-time
+                    example: '2017-07-08T16:18:44-04:00'
+                  updated_at:
+                    type: string
+                    format: date-time
+                    example: '2017-07-08T16:18:44-04:00'
+                  permissions:
+                    description: The set of permissions for the GitHub app
+                    type: object
+                    properties:
+                      issues:
+                        type: string
+                      checks:
+                        type: string
+                      metadata:
+                        type: string
+                      contents:
+                        type: string
+                      deployments:
+                        type: string
+                    additionalProperties:
+                      type: string
+                    example:
+                      issues: read
+                      deployments: write
+                  events:
+                    description: The list of events for the GitHub app
+                    example:
+                    - label
+                    - deployment
+                    type: array
+                    items:
+                      type: string
+                  installations_count:
+                    description: The number of installations associated with the GitHub
+                      app
+                    example: 5
+                    type: integer
+                  client_id:
+                    type: string
+                    example: '"Iv1.25b5d1e65ffc4022"'
+                  client_secret:
+                    type: string
+                    example: '"1d4b2097ac622ba702d19de498f005747a8b21d3"'
+                  webhook_secret:
+                    type: string
+                    example: '"6fba8f2fc8a7e8f2cca5577eddd82ca7586b3b6b"'
+                    nullable: true
+                  pem:
+                    type: string
+                    example: '"-----BEGIN RSA PRIVATE KEY-----\nMIIEogIBAAKCAQEArYxrNYD/iT5CZVpRJu4rBKmmze3PVmT/gCo2ATUvDvZTPTey\nxcGJ3vvrJXazKk06pN05TN29o98jrYz4cengG3YGsXPNEpKsIrEl8NhbnxapEnM9\nJCMRe0P5JcPsfZlX6hmiT7136GRWiGOUba2X9+HKh8QJVLG5rM007TBER9/z9mWm\nrJuNh+m5l320oBQY/Qq3A7wzdEfZw8qm/mIN0FCeoXH1L6B8xXWaAYBwhTEh6SSn\nZHlO1Xu1JWDmAvBCi0RO5aRSKM8q9QEkvvHP4yweAtK3N8+aAbZ7ovaDhyGz8r6r\nzhU1b8Uo0Z2ysf503WqzQgIajr7Fry7/kUwpgQIDAQABAoIBADwJp80Ko1xHPZDy\nfcCKBDfIuPvkmSW6KumbsLMaQv1aGdHDwwTGv3t0ixSay8CGlxMRtRDyZPib6SvQ\n6OH/lpfpbMdW2ErkksgtoIKBVrDilfrcAvrNZu7NxRNbhCSvN8q0s4ICecjbbVQh\nnueSdlA6vGXbW58BHMq68uRbHkP+k+mM9U0mDJ1HMch67wlg5GbayVRt63H7R2+r\nVxcna7B80J/lCEjIYZznawgiTvp3MSanTglqAYi+m1EcSsP14bJIB9vgaxS79kTu\noiSo93leJbBvuGo8QEiUqTwMw4tDksmkLsoqNKQ1q9P7LZ9DGcujtPy4EZsamSJT\ny8OJt0ECgYEA2lxOxJsQk2kI325JgKFjo92mQeUObIvPfSNWUIZQDTjniOI6Gv63\nGLWVFrZcvQBWjMEQraJA9xjPbblV8PtfO87MiJGLWCHFxmPz2dzoedN+2Coxom8m\nV95CLz8QUShuao6u/RYcvUaZEoYs5bHcTmy5sBK80JyEmafJPtCQVxMCgYEAy3ar\nZr3yv4xRPEPMat4rseswmuMooSaK3SKub19WFI5IAtB/e7qR1Rj9JhOGcZz+OQrl\nT78O2OFYlgOIkJPvRMrPpK5V9lslc7tz1FSh3BZMRGq5jSyD7ETSOQ0c8T2O/s7v\nbeEPbVbDe4mwvM24XByH0GnWveVxaDl51ABD65sCgYB3ZAspUkOA5egVCh8kNpnd\nSd6SnuQBE3ySRlT2WEnCwP9Ph6oPgn+oAfiPX4xbRqkL8q/k0BdHQ4h+zNwhk7+h\nWtPYRAP1Xxnc/F+jGjb+DVaIaKGU18MWPg7f+FI6nampl3Q0KvfxwX0GdNhtio8T\nTj1E+SnFwh56SRQuxSh2gwKBgHKjlIO5NtNSflsUYFM+hyQiPiqnHzddfhSG+/3o\nm5nNaSmczJesUYreH5San7/YEy2UxAugvP7aSY2MxB+iGsiJ9WD2kZzTUlDZJ7RV\nUzWsoqBR+eZfVJ2FUWWvy8TpSG6trh4dFxImNtKejCR1TREpSiTV3Zb1dmahK9GV\nrK9NAoGAbBxRLoC01xfxCTgt5BDiBcFVh4fp5yYKwavJPLzHSpuDOrrI9jDn1oKN\nonq5sDU1i391zfQvdrbX4Ova48BN+B7p63FocP/MK5tyyBoT8zQEk2+vWDOw7H/Z\nu5dTCPxTIsoIwUw1I+7yIxqJzLPFgR2gVBwY1ra/8iAqCj+zeBw=\n-----END
+                      RSA PRIVATE KEY-----\n"'
+                required: &54
+                - id
+                - node_id
+                - owner
+                - name
+                - description
+                - external_url
+                - html_url
+                - created_at
+                - updated_at
+                - permissions
+                - events
+              examples:
+                default: &30
+                  value:
+                    id: 1
+                    slug: octoapp
+                    node_id: MDExOkludGVncmF0aW9uMQ==
+                    owner:
+                      login: octocat
+                      id: 1
+                      node_id: MDQ6VXNlcjE=
+                      avatar_url: https://github.com/images/error/octocat_happy.gif
+                      gravatar_id: ''
+                      url: https://api.github.com/users/octocat
+                      html_url: https://github.com/octocat
+                      followers_url: https://api.github.com/users/octocat/followers
+                      following_url: https://api.github.com/users/octocat/following{/other_user}
+                      gists_url: https://api.github.com/users/octocat/gists{/gist_id}
+                      starred_url: https://api.github.com/users/octocat/starred{/owner}{/repo}
+                      subscriptions_url: https://api.github.com/users/octocat/subscriptions
+                      organizations_url: https://api.github.com/users/octocat/orgs
+                      repos_url: https://api.github.com/users/octocat/repos
+                      events_url: https://api.github.com/users/octocat/events{/privacy}
+                      received_events_url: https://api.github.com/users/octocat/received_events
+                      type: User
+                      site_admin: false
+                    name: Octocat App
+                    description: ''
+                    external_url: https://example.com
+                    html_url: https://github.com/apps/octoapp
+                    created_at: '2017-07-08T16:18:44-04:00'
+                    updated_at: '2017-07-08T16:18:44-04:00'
+                    permissions:
+                      metadata: read
+                      contents: read
+                      issues: write
+                      single_file: write
+                    events:
+                    - push
+                    - pull_request
+      x-github:
+        githubCloudOnly: false
+        enabledForGitHubApps: true
+        category: apps
+        subcategory: apps
+  "/app-manifests/{code}/conversions":
+    post:
+      summary: Create a GitHub App from a manifest
+      description: Use this endpoint to complete the handshake necessary when implementing
+        the [GitHub App Manifest flow](https://docs.github.com/apps/building-github-apps/creating-github-apps-from-a-manifest/).
+        When you create a GitHub App with the manifest flow, you receive a temporary
+        `code` used to retrieve the GitHub App's `id`, `pem` (private key), and `webhook_secret`.
+      tags:
+      - apps
+      operationId: apps/create-from-manifest
+      externalDocs:
+        description: API method documentation
+        url: https://docs.github.com/rest/apps/apps#create-a-github-app-from-a-manifest
+      parameters:
+      - name: code
+        in: path
+        required: true
+        schema:
+          type: string
+      responses:
+        '201':
+          description: Response
+          content:
+            application/json:
+              schema:
+                allOf:
+                - *6
+                - type: object
+                  properties:
+                    client_id:
+                      type: string
+                    client_secret:
+                      type: string
+                    webhook_secret:
+                      type: string
+                      nullable: true
+                    pem:
+                      type: string
+                  required:
+                  - client_id
+                  - client_secret
+                  - webhook_secret
+                  - pem
+                  additionalProperties: true
+              examples:
+                default:
+                  value:
+                    id: 1
+                    slug: octoapp
+                    node_id: MDxOkludGVncmF0aW9uMQ==
+                    owner:
+                      login: github
+                      id: 1
+                      node_id: MDEyOk9yZ2FuaXphdGlvbjE=
+                      url: https://api.github.com/orgs/github
+                      repos_url: https://api.github.com/orgs/github/repos
+                      events_url: https://api.github.com/orgs/github/events
+                      avatar_url: https://github.com/images/error/octocat_happy.gif
+                      gravatar_id: ''
+                      html_url: https://github.com/octocat
+                      followers_url: https://api.github.com/users/octocat/followers
+                      following_url: https://api.github.com/users/octocat/following{/other_user}
+                      gists_url: https://api.github.com/users/octocat/gists{/gist_id}
+                      starred_url: https://api.github.com/users/octocat/starred{/owner}{/repo}
+                      subscriptions_url: https://api.github.com/users/octocat/subscriptions
+                      organizations_url: https://api.github.com/users/octocat/orgs
+                      received_events_url: https://api.github.com/users/octocat/received_events
+                      type: User
+                      site_admin: true
+                    name: Octocat App
+                    description: ''
+                    external_url: https://example.com
+                    html_url: https://github.com/apps/octoapp
+                    created_at: '2017-07-08T16:18:44-04:00'
+                    updated_at: '2017-07-08T16:18:44-04:00'
+                    permissions:
+                      metadata: read
+                      contents: read
+                      issues: write
+                      single_file: write
+                    events:
+                    - push
+                    - pull_request
+                    client_id: Iv1.8a61f9b3a7aba766
+                    client_secret: 1726be1638095a19edd134c77bde3aa2ece1e5d8
+                    webhook_secret: e340154128314309424b7c8e90325147d99fdafa
+                    pem: |
+                      -----BEGIN RSA PRIVATE KEY-----
+                      MIIEowIBAAKCAQEAuEPzOUE+kiEH1WLiMeBytTEF856j0hOVcSUSUkZxKvqczkWM
+                      9vo1gDyC7ZXhdH9fKh32aapba3RSsp4ke+giSmYTk2mGR538ShSDxh0OgpJmjiKP
+                      X0Bj4j5sFqfXuCtl9SkH4iueivv4R53ktqM+n6hk98l6hRwC39GVIblAh2lEM4L/
+                      6WvYwuQXPMM5OG2Ryh2tDZ1WS5RKfgq+9ksNJ5Q9UtqtqHkO+E63N5OK9sbzpUUm
+                      oNaOl3udTlZD3A8iqwMPVxH4SxgATBPAc+bmjk6BMJ0qIzDcVGTrqrzUiywCTLma
+                      szdk8GjzXtPDmuBgNn+o6s02qVGpyydgEuqmTQIDAQABAoIBACL6AvkjQVVLn8kJ
+                      dBYznJJ4M8ECo+YEgaFwgAHODT0zRQCCgzd+Vxl4YwHmKV2Lr+y2s0drZt8GvYva
+                      KOK8NYYZyi15IlwFyRXmvvykF1UBpSXluYFDH7KaVroWMgRreHcIys5LqVSIb6Bo
+                      gDmK0yBLPp8qR29s2b7ScZRtLaqGJiX+j55rNzrZwxHkxFHyG9OG+u9IsBElcKCP
+                      kYCVE8ZdYexfnKOZbgn2kZB9qu0T/Mdvki8yk3I2bI6xYO24oQmhnT36qnqWoCBX
+                      NuCNsBQgpYZeZET8mEAUmo9d+ABmIHIvSs005agK8xRaP4+6jYgy6WwoejJRF5yd
+                      NBuF7aECgYEA50nZ4FiZYV0vcJDxFYeY3kYOvVuKn8OyW+2rg7JIQTremIjv8FkE
+                      ZnwuF9ZRxgqLxUIfKKfzp/5l5LrycNoj2YKfHKnRejxRWXqG+ZETfxxlmlRns0QG
+                      J4+BYL0CoanDSeA4fuyn4Bv7cy/03TDhfg/Uq0Aeg+hhcPE/vx3ebPsCgYEAy/Pv
+                      eDLssOSdeyIxf0Brtocg6aPXIVaLdus+bXmLg77rJIFytAZmTTW8SkkSczWtucI3
+                      FI1I6sei/8FdPzAl62/JDdlf7Wd9K7JIotY4TzT7Tm7QU7xpfLLYIP1bOFjN81rk
+                      77oOD4LsXcosB/U6s1blPJMZ6AlO2EKs10UuR1cCgYBipzuJ2ADEaOz9RLWwi0AH
+                      Pza2Sj+c2epQD9ZivD7Zo/Sid3ZwvGeGF13JyR7kLEdmAkgsHUdu1rI7mAolXMaB
+                      1pdrsHureeLxGbRM6za3tzMXWv1Il7FQWoPC8ZwXvMOR1VQDv4nzq7vbbA8z8c+c
+                      57+8tALQHOTDOgQIzwK61QKBgERGVc0EJy4Uag+VY8J4m1ZQKBluqo7TfP6DQ7O8
+                      M5MX73maB/7yAX8pVO39RjrhJlYACRZNMbK+v/ckEQYdJSSKmGCVe0JrGYDuPtic
+                      I9+IGfSorf7KHPoMmMN6bPYQ7Gjh7a++tgRFTMEc8956Hnt4xGahy9NcglNtBpVN
+                      6G8jAoGBAMCh028pdzJa/xeBHLLaVB2sc0Fe7993WlsPmnVE779dAz7qMscOtXJK
+                      fgtriltLSSD6rTA9hUAsL/X62rY0wdXuNdijjBb/qvrx7CAV6i37NK1CjABNjsfG
+                      ZM372Ac6zc1EqSrid2IjET1YqyIW2KGLI1R2xbQc98UGlt48OdWu
+                      -----END RSA PRIVATE KEY-----
+        '404': *7
+        '422': *8
+      x-github:
+        githubCloudOnly: false
+        enabledForGitHubApps: false
+        category: apps
+        subcategory: apps
+  "/app/hook/config":
+    get:
+      summary: Get a webhook configuration for an app
+      description: |-
+        Returns the webhook configuration for a GitHub App. For more information about configuring a webhook for your app, see "[Creating a GitHub App](/developers/apps/creating-a-github-app)."
+
+        You must use a [JWT](https://docs.github.com/apps/building-github-apps/authenticating-with-github-apps/#authenticating-as-a-github-app) to access this endpoint.
+      tags:
+      - apps
+      operationId: apps/get-webhook-config-for-app
+      externalDocs:
+        description: API method documentation
+        url: https://docs.github.com/rest/apps/webhooks#get-a-webhook-configuration-for-an-app
+      responses:
+        '200':
+          description: Response
+          content:
+            application/json:
+              schema: &13
+                title: Webhook Configuration
+                description: Configuration object of the webhook
+                type: object
+                properties:
+                  url: &9
+                    type: string
+                    description: The URL to which the payloads will be delivered.
+                    example: https://example.com/webhook
+                    format: uri
+                  content_type: &10
+                    type: string
+                    description: The media type used to serialize the payloads. Supported
+                      values include `json` and `form`. The default is `form`.
+                    example: '"json"'
+                  secret: &11
+                    type: string
